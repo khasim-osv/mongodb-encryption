@@ -10,12 +10,14 @@ let localMasterKey = fs.readFileSync("./masterKey.txt");
 //generate, if master key not present
 /*async function generateMasterKey() {
   try {
-    await fs.writeFileSync("masterKey.txt", crypto.randomBytes(96));
+    const key = crypto.randomBytes(96);
+    await fs.writeFileSync("masterKey.txt", key);
+    await fs.writeFileSync("masterKeyBase64.txt", key.toString("base64"));
   } catch (err) {
     throw err;
   }
 }
-if (!localMasterKey) generateMasterKey();*/
+generateMasterKey();*/
 //End here
 
 const kmsProviders = { local: { key: localMasterKey } };
@@ -77,11 +79,15 @@ async function main() {
       //insert data
       await collection.insertOne({
         name: "Khasim Ali",
-        userName: "khasim@onesingleview.com",
+        userName: "ali@onesingleview.com",
         password: "12345kK$",
       });
       //fetch data
       const data = await collection.find().toArray();
+      //Find records
+      /*const data = await collection
+        .find({ userName: "ali@onesingleview.com" })
+        .toArray();*/
       console.log(data);
     } finally {
       await encryptedClient.close();
